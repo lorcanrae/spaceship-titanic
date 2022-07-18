@@ -13,12 +13,14 @@ from sklearn.ensemble import GradientBoostingClassifier, VotingClassifier
 
 from preprocessing import drop_columns, cabin_transform, feat_cols
 
-def create_preproc_1(X_train):
+def create_preproc_1():
+    '''Create preprocessing pipe part 1: dropping columns and cabin transform'''
     drop_col = FunctionTransformer(drop_columns)
     cabin_trans = FunctionTransformer(cabin_transform)
     return make_pipeline(drop_col, cabin_trans)
 
-def create_preproc_2(X_train):
+def create_preproc_2():
+    '''Create preprocessing pipe part 2: imputing, encoding, scaling'''
     # Imputers
     median_imp = SimpleImputer(strategy='median')
     mode_imp = SimpleImputer(strategy='most_frequent')
@@ -31,7 +33,7 @@ def create_preproc_2(X_train):
     r_scaler = RobustScaler()
     mm_scaler = MinMaxScaler()
 
-    # Four parallel pipes
+    # Four parallel pipes for different data types and encoding requirements
     trans_num = make_pipeline(median_imp, r_scaler)
     trans_ohe = make_pipeline(mode_imp, ohe_enc)
     trans_ordstr = make_pipeline(mode_imp, ord_enc, mm_scaler)
@@ -46,10 +48,11 @@ def create_preproc_2(X_train):
     return preproc_2
 
 def create_preproc():
+    '''Assemble complete preprocessing pipe'''
     return make_pipeline(create_preproc_1(), create_preproc_2())
 
 def create_models():
-    # Instantiate chosen models
+    '''Instantiate chosen models'''
     svc_rbf = SVC(kernel='rbf', probability=True)
     knn_cla = KNeighborsClassifier(n_neighbors=19)
     gbe_ens = GradientBoostingClassifier(
@@ -62,7 +65,7 @@ def create_models():
     return (svc_rbf, knn_cla, gbe_ens)
 
 def create_models_params():
-    # Parameters for the gridsearch
+    '''Create parameter dictionaries for GridSearchCV'''
     svc_rbf_params = {
         'svc__C': [30, 35, 40]
         }
@@ -81,35 +84,37 @@ def create_models_params():
     return (svc_rbf_params, knn_cla_params, gbe_ens_params)
 
 def create_models_dict():
-    # put it all in a dictionary for easy access
+    '''Create dictionary containing model data'''
     svc_rbf, knn_cla, gbe_ens = create_models()
-    svc_rbf_params, knn_cla_params, gbm_ens_params = \
-        create_models_params()
+    svc_rbf_params, knn_cla_params, gbm_ens_params = create_models_params()
     models_dict = {'rbf_svc':
-            {
-                'model': svc_rbf,
-                'params': svc_rbf_params,
-                'best_score': None,
-                'best_params': None,
-                'best_estimator': None
-            },
-            'knn_cla':
-            {
-                'model': knn_cla,
-                'params': knn_cla_params,
-                'best_score': None,
-                'best_params': None,
-                'best_estimator': None
-            },
-            'gbm_ens':
-            {
-                'model': gbe_ens,
-                'params': gbm_ens_params,
-                'best_score': None,
-                'best_params': None,
-                'best_estimator': None
-            }
+        {
+            'name': 'rbf_svc',
+            'model': svc_rbf,
+            'params': svc_rbf_params,
+            'best_score': None,
+            'best_params': None,
+            'best_estimator': None
+        },
+        'knn_cla':
+        {
+            'name': 'knn_cla',
+            'model': knn_cla,
+            'params': knn_cla_params,
+            'best_score': None,
+            'best_params': None,
+            'best_estimator': None
+        },
+        'gbm_ens':
+        {
+            'name': 'gbm_ens',
+            'model': gbe_ens,
+            'params': gbm_ens_params,
+            'best_score': None,
+            'best_params': None,
+            'best_estimator': None
         }
+    }
     return models_dict
 
     voting_classifier = VotingClassifier(estimators=[svc_rbf, knn_cla, gbe_ens],

@@ -2,10 +2,10 @@ from google.cloud import storage
 import numpy as np
 import pandas as pd
 import joblib
-import datetime
+from datetime import datetime
 
 from sklearn.ensemble import VotingClassifier
-from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import GridSearchCV, cross_validate
 from sklearn.pipeline import make_pipeline
 
 from pipeline import create_preproc, create_models_dict
@@ -32,19 +32,23 @@ class Trainer:
         self.data = None
         self.X_train = None
         self.y_train = None
-        self.model_dict = create_models_dict()
+        self.models_dict = create_models_dict()
         self.preproc = create_preproc()
         self.best_estimators = None
         self.final_pipe = None
 
     def load_data(self):
+        '''Load data from GCP Bucket to frame'''
         self.data = pd.read_csv(f'gs://{BUCKET_NAME}/{BUCKET_TRAIN_DATA_PATH}')
         self.X_train = self.data.drop(columns='Transported')
         self.y_train = self.data['Transported']
-        print(f'--- X_train shape: {self.X_train.shape}')
+        print('--- Data Successfully Loaded ---')
+        print(f'--- X_train shape: {self.X_train.shape} ---')
+        return self
 
     def gridsearchcv_tune(self, cv=5):
-        for model in self.model_dict.values():
+        '''Perform gridsearch based on models_dict["models"]["params"]'''
+        for model in self.models_dict.values():
             search = GridSearchCV(make_pipeline(self.preproc, model['model']),
                                   model['params'],
                                   cv=cv,
@@ -54,9 +58,12 @@ class Trainer:
             model['best_score'] = search.best_score_
             model['best_params'] = search.best_params_
             model['best_estimator'] = search.best_estimator_
+            print(f'{model["name"]} gridsearch complete!')
+        print('Hyperparameter tuning complete!')
         return self
 
     def assemble_pipe(self):
+        '''Assemble final pipe with preprocess + voting classifier ensemble'''
         self.best_estimators = [model['best_estimator'] for model in self.models_dict.values()]
         voting_classifier = VotingClassifier(
             estimators=self.best_estimators,
@@ -65,6 +72,23 @@ class Trainer:
             )
         self.final_pipe = make_pipeline(self.preproc, voting_classifier)
         return self
+
+    def cross_val(self, cv=5):
+        '''cross validate final pipe'''
+        score = cross_validate(self.final_pipe,
+                               self.X_train,
+                               self.y_train,
+                               cv=cv,
+                               scoring='accuracy',
+                               n_jobs=1)
+        print(score['test_score'].mean())
+        return score['test_score'].mean()
+
+    def model_train(self):
+        '''Train final pipeline with training data set'''
+        print('Training model')
+        self.final_pipe.fit(self.X_train, self.y_train)
+        print('Model training complete!')
 
 
 # Upload and save model to GCP
@@ -90,8 +114,4 @@ def save_model(model):
 
 if __name__ == '__main__':
     trainer = Trainer()
-    trainer.load_data()
-
-    # model = train(X_train, y_train)
-
-    # save_model(model)
+    trainer.load_data().gridsearchcv_tune().assemble_pipe()
