@@ -42,7 +42,7 @@ class Trainer:
         self.data = pd.read_csv(f'gs://{BUCKET_NAME}/{BUCKET_TRAIN_DATA_PATH}')
         self.X_train = self.data.drop(columns='Transported')
         self.y_train = self.data['Transported']
-        print('--- Data Successfully Loaded ---')
+        print('--- Data Successfully Loaded ----')
         print(f'--- X_train shape: {self.X_train.shape} ---')
         return self
 
@@ -64,6 +64,7 @@ class Trainer:
 
     def assemble_pipe(self):
         '''Assemble final pipe with preprocess + voting classifier ensemble'''
+        print('--- Assembling Final Pipe ---')
         self.best_estimators = [model['best_estimator'] for model in self.models_dict.values()]
         voting_classifier = VotingClassifier(
             estimators=self.best_estimators,
@@ -71,10 +72,12 @@ class Trainer:
             weights=[1, 1, 1]
             )
         self.final_pipe = make_pipeline(self.preproc, voting_classifier)
+        print('--- Final Pipe Assembled ---')
         return self
 
     def cross_val(self, cv=5):
         '''cross validate final pipe'''
+        print('--- Cross Validating Final Pipe ---')
         score = cross_validate(self.final_pipe,
                                self.X_train,
                                self.y_train,
@@ -82,6 +85,7 @@ class Trainer:
                                scoring='accuracy',
                                n_jobs=1)
         print(score['test_score'].mean())
+        print('--- Cross Validate complete')
         return score['test_score'].mean()
 
     def model_train(self):
@@ -89,7 +93,6 @@ class Trainer:
         print('Training model')
         self.final_pipe.fit(self.X_train, self.y_train)
         print('Model training complete!')
-
 
 # Upload and save model to GCP
 
@@ -114,4 +117,4 @@ def save_model(model):
 
 if __name__ == '__main__':
     trainer = Trainer()
-    trainer.load_data().gridsearchcv_tune().assemble_pipe()
+    trainer.load_data().gridsearchcv_tune().assemble_pipe().cross_val()
