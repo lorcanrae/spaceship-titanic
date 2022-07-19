@@ -23,7 +23,7 @@ clean:
 	@rm -fr */__pycache__ */*.pyc __pycache__
 	@rm -fr build dist
 	@rm -fr spaceship-titanic-*.dist-info
-	@rm -fr spaceship-titanic.egg-info
+	@rm -fr spaceship_titanic.egg-info
 
 install:
 	@pip install . -U
