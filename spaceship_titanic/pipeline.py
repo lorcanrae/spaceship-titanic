@@ -117,11 +117,6 @@ def create_models_dict():
     }
     return models_dict
 
-    voting_classifier = VotingClassifier(estimators=[svc_rbf, knn_cla, gbe_ens],
-                                         voting='soft',
-                                         weights=[1, 1, 1])
-    return voting_classifier
 
-
-if __name__ == '__main__':
-    pass
+# if __name__ == '__main__':
+#     pass

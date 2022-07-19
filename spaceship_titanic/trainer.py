@@ -8,7 +8,7 @@ from sklearn.ensemble import VotingClassifier
 from sklearn.model_selection import GridSearchCV, cross_validate
 from sklearn.pipeline import make_pipeline
 
-from pipeline import create_preproc, create_models_dict
+from spaceship_titanic.pipeline import create_preproc, create_models_dict
 
 # Model imports
 
