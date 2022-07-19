@@ -88,7 +88,7 @@ RUNTIME_VERSION=1.15
 
 ##### Package params  - - - - - - - - - - - - - - - - - - -
 
-PACKAGE_NAME=spaceship-titanic
+PACKAGE_NAME=spaceship_titanic
 FILENAME=trainer
 
 ##### Job - - - - - - - - - - - - - - - - - - - - - - - - -

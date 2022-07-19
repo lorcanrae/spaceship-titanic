@@ -1,5 +1,5 @@
-import numpy as np
-import pandas as pd
+# import numpy as np
+# import pandas as pd
 
 from sklearn.pipeline import make_pipeline
 from sklearn.impute import SimpleImputer
@@ -9,9 +9,9 @@ from sklearn.preprocessing import OneHotEncoder, OrdinalEncoder
 
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
-from sklearn.ensemble import GradientBoostingClassifier, VotingClassifier
+from sklearn.ensemble import GradientBoostingClassifier
 
-from preprocessing import drop_columns, cabin_transform, feat_cols
+from spaceship_titanic.preprocessing import drop_columns, cabin_transform, feat_cols
 
 def create_preproc_1():
     '''Create preprocessing pipe part 1: dropping columns and cabin transform'''
