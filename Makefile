@@ -84,7 +84,7 @@ BUCKET_TRAINING_FOLDER = 'trainings'
 ##### Machine configuration - - - - - - - - - - - - - - - -
 PYTHON_VERSION=3.7
 FRAMEWORK=scikit-learn
-RUNTIME_VERSION=1.15
+RUNTIME_VERSION=2.8
 
 ##### Package params  - - - - - - - - - - - - - - - - - - -
 
@@ -92,7 +92,7 @@ PACKAGE_NAME=spaceship_titanic
 FILENAME=trainer
 
 ##### Job - - - - - - - - - - - - - - - - - - - - - - - - -
-JOB_NAME=spaceship-titanic-training-pipeline-$(shell date +'%Y%m%d_%H%M%S')
+JOB_NAME=spaceship_titanic_training_pipeline_$(shell date +'%Y%m%d_%H%M%S')
 
 run_locally:
 	@python -m ${PACKAGE_NAME}.${FILENAME}

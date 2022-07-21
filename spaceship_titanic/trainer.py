@@ -2,7 +2,9 @@ from google.cloud import storage
 import numpy as np
 import pandas as pd
 import joblib
+import os
 from datetime import datetime
+import tempfile
 
 from sklearn.ensemble import VotingClassifier
 from sklearn.model_selection import GridSearchCV, cross_validate
@@ -23,7 +25,6 @@ BUCKET_TRAIN_DATA_PATH = 'data/train.csv'
 
 MODEL_NAME = 'spaceship-titanic-model'
 MODEL_VERSION = 'v1'
-DATE_STAMP = datetime.now().strftime('%y%m%d')
 
 
 class Trainer:
@@ -36,6 +37,7 @@ class Trainer:
         self.preproc = create_preproc()
         self.best_estimators = None
         self.final_pipe = None
+        self.trained = False
 
     def load_data(self):
         '''Load data from GCP Bucket to frame'''
@@ -88,33 +90,62 @@ class Trainer:
         print('--- Cross Validate complete')
         return score['test_score'].mean()
 
-    def model_train(self):
+    def train_model(self):
         '''Train final pipeline with training data set'''
         print('Training model')
         self.final_pipe.fit(self.X_train, self.y_train)
+        self.trained = True
         print('Model training complete!')
+        return self
 
-# Upload and save model to GCP
+    def save_model(self, gcp=False):
+        '''Save the model into a .joblib format'''
+        if self.trained:
+            abs_cwd = os.path.dirname(os.path.abspath(__file__))
+            self.local_model_name = f"model-{datetime.now().strftime('%y%m%d-%H%M%S')}.joblib"
+            self.local_model_path = os.path.join('saved_models', self.local_model_name)
+            if gcp:
+                self.temp_dir = tempfile.TemporaryDirectory().name
+                self.local_model_path = os.path.join(self.temp_dir, self.local_model_name)
+            joblib.dump(self.final_pipe, self.local_model_name)
+            print(f'{self.local_model_name} saved locally into /saved_models/')
+        else:
+            print('Train model first!')
+        return self
 
-def upload_model_to_gcp(model_name):
-    client = storage.Client()
-    bucket = client.bucket(BUCKET_NAME)
-    blob = bucket.blob(f'models/{DATE_STAMP}/')
-    blob.upload_from_filename(model_name)
+    # def save_model(self):
+    #     '''Save the model into a .joblib format'''
+    #     if self.trained:
+    #         self.local_model_name = f"model-{datetime.now().strftime('%y%m%d-%H%M%S')}.joblib"
+    #         joblib.dump(self.final_pipe, self.local_model_name)
+    #         print(f'{self.local_model_name} saved locally')
+    #     else:
+    #         print('Train model first!')
+    #     return self
 
-def save_model(model):
-    # save model locally
-    time_stamp = datetime.now().strftime("%y%m%d-%H%M")
-    model_name = f'{MODEL_NAME}-{MODEL_VERSION}-{time_stamp}.joblib'
-    joblib.dump(model, model_name)
-    print(f'saved {model_name} locally!')
+    ### GCP Methods
 
-    # Push to gcp
-    upload_model_to_gcp(model_name)
-    print(f'uploaded {model} to GCP cloud storage under')
-    print(f'=> gs://{BUCKET_NAME}/models/{DATE_STAMP}/{model_name}')
+    def upload_model_to_gcp(self):
+        '''Save model to GCP bucket'''
+        if self.trained:
+            print('Starting upload to GCP')
+            client = storage.Client().bucket(BUCKET_NAME)
+            gcp_storage_location = \
+                f"models/{MODEL_NAME}/{MODEL_VERSION}/{self.local_model_name}"
+            blob = client.blob(gcp_storage_location)
+            blob.upload_from_filename(self.local_model_path)
+            print(f"=> {self.local_model_name} uploaded to GCP Bucket {BUCKET_NAME}")
+            print(f"inside {gcp_storage_location}")
+            self.temp_dir.cleanup()
+        else:
+            print('Train model first!')
+        return self
 
+    def save_to_gcp(self):
+        pass
 
 if __name__ == '__main__':
     trainer = Trainer()
-    trainer.load_data().gridsearchcv_tune().assemble_pipe().cross_val()
+    trainer.load_data().gridsearchcv_tune().assemble_pipe()
+    trainer.train_model()
+    trainer.save_model(gcp=True).upload_model_to_gcp()
