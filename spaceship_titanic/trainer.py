@@ -98,30 +98,30 @@ class Trainer:
         print('Model training complete!')
         return self
 
-    def save_model(self, gcp=False):
-        '''Save the model into a .joblib format'''
-        if self.trained:
-            abs_cwd = os.path.dirname(os.path.abspath(__file__))
-            self.local_model_name = f"model-{datetime.now().strftime('%y%m%d-%H%M%S')}.joblib"
-            self.local_model_path = os.path.join('saved_models', self.local_model_name)
-            if gcp:
-                self.temp_dir = tempfile.TemporaryDirectory().name
-                self.local_model_path = os.path.join(self.temp_dir, self.local_model_name)
-            joblib.dump(self.final_pipe, self.local_model_name)
-            print(f'{self.local_model_name} saved locally into /saved_models/')
-        else:
-            print('Train model first!')
-        return self
-
-    # def save_model(self):
+    # def save_model(self, gcp=False):
     #     '''Save the model into a .joblib format'''
     #     if self.trained:
+    #         abs_cwd = os.path.dirname(os.path.abspath(__file__))
     #         self.local_model_name = f"model-{datetime.now().strftime('%y%m%d-%H%M%S')}.joblib"
+    #         self.local_model_path = os.path.join('saved_models', self.local_model_name)
+    #         if gcp:
+    #             self.temp_dir = tempfile.TemporaryDirectory().name
+    #             self.local_model_path = os.path.join(self.temp_dir, self.local_model_name)
     #         joblib.dump(self.final_pipe, self.local_model_name)
-    #         print(f'{self.local_model_name} saved locally')
+    #         print(f'{self.local_model_name} saved locally into /saved_models/')
     #     else:
     #         print('Train model first!')
     #     return self
+
+    def save_model(self):
+        '''Save the model into a .joblib format'''
+        if self.trained:
+            self.local_model_name = f"model-{datetime.now().strftime('%y%m%d-%H%M%S')}.joblib"
+            joblib.dump(self.final_pipe, self.local_model_name)
+            print(f'{self.local_model_name} saved locally')
+        else:
+            print('Train model first!')
+        return self
 
     ### GCP Methods
 
@@ -133,19 +133,15 @@ class Trainer:
             gcp_storage_location = \
                 f"models/{MODEL_NAME}/{MODEL_VERSION}/{self.local_model_name}"
             blob = client.blob(gcp_storage_location)
-            blob.upload_from_filename(self.local_model_path)
+            blob.upload_from_filename(self.local_model_name)
             print(f"=> {self.local_model_name} uploaded to GCP Bucket {BUCKET_NAME}")
             print(f"inside {gcp_storage_location}")
-            self.temp_dir.cleanup()
         else:
             print('Train model first!')
         return self
-
-    def save_to_gcp(self):
-        pass
 
 if __name__ == '__main__':
     trainer = Trainer()
     trainer.load_data().gridsearchcv_tune().assemble_pipe()
     trainer.train_model()
-    trainer.save_model(gcp=True).upload_model_to_gcp()
+    trainer.save_model().upload_model_to_gcp()
