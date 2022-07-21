@@ -98,21 +98,6 @@ class Trainer:
         print('Model training complete!')
         return self
 
-    # def save_model(self, gcp=False):
-    #     '''Save the model into a .joblib format'''
-    #     if self.trained:
-    #         abs_cwd = os.path.dirname(os.path.abspath(__file__))
-    #         self.local_model_name = f"model-{datetime.now().strftime('%y%m%d-%H%M%S')}.joblib"
-    #         self.local_model_path = os.path.join('saved_models', self.local_model_name)
-    #         if gcp:
-    #             self.temp_dir = tempfile.TemporaryDirectory().name
-    #             self.local_model_path = os.path.join(self.temp_dir, self.local_model_name)
-    #         joblib.dump(self.final_pipe, self.local_model_name)
-    #         print(f'{self.local_model_name} saved locally into /saved_models/')
-    #     else:
-    #         print('Train model first!')
-    #     return self
-
     def save_model(self):
         '''Save the model into a .joblib format'''
         if self.trained:
@@ -122,6 +107,7 @@ class Trainer:
         else:
             print('Train model first!')
         return self
+
 
     ### GCP Methods
 
@@ -139,6 +125,7 @@ class Trainer:
         else:
             print('Train model first!')
         return self
+
 
 if __name__ == '__main__':
     trainer = Trainer()
