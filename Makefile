@@ -106,3 +106,9 @@ gcp_submit_training:
 		--runtime-version=${RUNTIME_VERSION} \
 		--region ${REGION} \
 		--stream-logs
+
+
+##### Prediction API - - - - - - - - - - - - - - - - - - -
+
+run_api:
+	uvicorn api.fast:app --reload
