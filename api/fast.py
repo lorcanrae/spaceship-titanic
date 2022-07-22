@@ -50,7 +50,7 @@ def predict(HomePlanet,
     allow_destinations = ['TRAPPIST-1e', '55 Cancri e', 'PSO J318.5-22']
     allow_bool = ['True', 'False']
 
-    # Hardcoded params
+    # Hardcoded params to build X (features not used in the model)
     PassengerId = '0001_01'
     Name = 'Maham Ofracculy'
 
@@ -75,6 +75,7 @@ def predict(HomePlanet,
 
     gcs_model_name = 'model-220721-170135.joblib'
 
+    # TODO: put this into a function - there should be a gcp.py module
     fs = gcsfs.GCSFileSystem()
     with fs.open(f'{BUCKET_NAME}/models/{MODEL_NAME}/{MODEL_VERSION}/{gcs_model_name}') as file:
         pipeline = joblib.load(file)
@@ -82,6 +83,6 @@ def predict(HomePlanet,
     y_pred = bool(pipeline.predict(X)[0])
     return dict(Transported=y_pred) # for some reason it can't return a numpy.bool_, has to be a regular bool
 
-if __name__ == '__main__':
-    y_pred = predict('Europa', 'True', 'A', '10', 'P', 'TRAPPIST-1e', '32', 'False')
-    print(y_pred['Transported'])
+# if __name__ == '__main__':
+#     y_pred = predict('Europa', 'True', 'A', '10', 'P', 'TRAPPIST-1e', '32', 'False')
+#     print(y_pred['Transported'])
