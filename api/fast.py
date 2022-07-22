@@ -90,6 +90,9 @@ def predict(HomePlanet,
     y_pred = bool(pipeline.predict(X)[0])
     return dict(Transported=y_pred) # for some reason it can't return a numpy.bool_, has to be a regular bool
 
-if __name__ == '__main__':
-    y_pred = predict('Europa', 'True', 'A', '10', 'P', 'TRAPPIST-1e', '32', 'False')
-    print(y_pred['Transported'])
+# if __name__ == '__main__':
+#     y_pred = predict('Europa', 'True', 'A', '10', 'P', 'TRAPPIST-1e', '32', 'False')
+#     print(y_pred['Transported'])
+
+
+# API URL: https://spaceship-titanic-api-zby5e6zv3q-ew.a.run.app
