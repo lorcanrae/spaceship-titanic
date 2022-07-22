@@ -3,6 +3,7 @@ import pandas as pd
 
 import joblib
 import gcsfs
+import os
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -19,9 +20,8 @@ app.add_middleware(
     allow_headers = ['*'],
 )
 
-# Test url
+# Test url local
 # http://127.0.0.1:8000/predict?HomePlanet=Europa&CryoSleep=False&Cabin_Deck=T&Cabin_Level=1000&Cabin_Side=S&Destination=TRAPPIST-1e&Age=32&VIP=False&RoomService=100&FoodCourt=5000&ShoppingHall=10&Spa=0&VRDeck=0
-
 # http://127.0.0.1:8000/predict?HomePlanet=Europa&CryoSleep=False&Cabin_Deck=C&Cabin_Level=100&Cabin_Side=S&Destination=TRAPPIST-1e&Age=32&VIP=False&RoomService=10000&FoodCourt=50000&ShoppingHall=10&Spa=10000&VRDeck=10000
 
 @app.get("/")
@@ -82,11 +82,14 @@ def predict(HomePlanet,
     # with fs.open(f'{BUCKET_NAME}/models/{MODEL_NAME}/{MODEL_VERSION}/{gcs_model_name}') as file:
     #     pipeline = joblib.load(file)
 
-    pipeline = joblib.load(f'saved_models/{gcs_model_name}')
+    rel_path = f'../saved_models/{gcs_model_name}'
+    abs_path = os.path.dirname(__file__)
 
+    pipeline = joblib.load(os.path.join(abs_path, rel_path))
+    print(abs_path)
     y_pred = bool(pipeline.predict(X)[0])
     return dict(Transported=y_pred) # for some reason it can't return a numpy.bool_, has to be a regular bool
 
-# if __name__ == '__main__':
-#     y_pred = predict('Europa', 'True', 'A', '10', 'P', 'TRAPPIST-1e', '32', 'False')
-#     print(y_pred['Transported'])
+if __name__ == '__main__':
+    y_pred = predict('Europa', 'True', 'A', '10', 'P', 'TRAPPIST-1e', '32', 'False')
+    print(y_pred['Transported'])
