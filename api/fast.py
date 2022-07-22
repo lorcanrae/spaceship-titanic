@@ -22,6 +22,8 @@ app.add_middleware(
 # Test url
 # http://127.0.0.1:8000/predict?HomePlanet=Europa&CryoSleep=False&Cabin_Deck=T&Cabin_Level=1000&Cabin_Side=S&Destination=TRAPPIST-1e&Age=32&VIP=False&RoomService=100&FoodCourt=5000&ShoppingHall=10&Spa=0&VRDeck=0
 
+# http://127.0.0.1:8000/predict?HomePlanet=Europa&CryoSleep=False&Cabin_Deck=C&Cabin_Level=100&Cabin_Side=S&Destination=TRAPPIST-1e&Age=32&VIP=False&RoomService=10000&FoodCourt=50000&ShoppingHall=10&Spa=10000&VRDeck=10000
+
 @app.get("/")
 def index():
     return dict(greeting='hello')
@@ -73,12 +75,14 @@ def predict(HomePlanet,
 
     # Loading model from GCP
 
-    gcs_model_name = 'model-220721-170135.joblib'
+    gcs_model_name = 'model-220721-162104.joblib'
 
     # TODO: put this into a function - there should be a gcp.py module
-    fs = gcsfs.GCSFileSystem()
-    with fs.open(f'{BUCKET_NAME}/models/{MODEL_NAME}/{MODEL_VERSION}/{gcs_model_name}') as file:
-        pipeline = joblib.load(file)
+    # fs = gcsfs.GCSFileSystem()
+    # with fs.open(f'{BUCKET_NAME}/models/{MODEL_NAME}/{MODEL_VERSION}/{gcs_model_name}') as file:
+    #     pipeline = joblib.load(file)
+
+    pipeline = joblib.load(f'saved_models/{gcs_model_name}')
 
     y_pred = bool(pipeline.predict(X)[0])
     return dict(Transported=y_pred) # for some reason it can't return a numpy.bool_, has to be a regular bool
