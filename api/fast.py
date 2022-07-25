@@ -26,17 +26,39 @@ app.add_middleware(
 
 @app.get("/")
 def index():
-    return dict(greeting='hello')
+    return dict(greeting='thanks for looking at my API',
+                info={'me': 'Lorcan Rae',
+                      'my_github': 'github.com/lorcanrae'
+                      },
+                data={'data_set': 'Spaceship_Titanic_Kagge',
+                      'kaggle_link': 'https://www.kaggle.com/competitions/spaceship-titanic',
+                      'field_format': {'FieldName': 'default median or mode value'},
+                      'fields_default': {'HomePlanet': 'Earth',
+                                'CryoSleep': False,
+                                'Cabin_Deck': 'F',
+                                'Cabin_Level': '82',
+                                'Caibn_Side': 'S',
+                                'Destination': 'TRAPPIST-1e',
+                                'Age': 27,
+                                'VIP': False,
+                                'RoomService': 0,
+                                'FoodCourt': 0,
+                                'ShoppingMall': 0,
+                                'Spa': 0,
+                                'VRDeck': 0
+                                }
+                      }
+                )
 
 @app.get("/predict")
-def predict(HomePlanet,
-            CryoSleep,
-            Cabin_Deck,
-            Cabin_Level,
-            Cabin_Side,
-            Destination,
-            Age,
-            VIP,
+def predict(HomePlanet='Earth',
+            CryoSleep=False,
+            Cabin_Deck='F',
+            Cabin_Level='82',
+            Cabin_Side='S',
+            Destination='TRAPPIST-1e',
+            Age=27,
+            VIP=False,
             RoomService=0,
             FoodCourt=0,
             ShoppingMall=0,
