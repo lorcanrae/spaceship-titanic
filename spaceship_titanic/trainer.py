@@ -1,5 +1,4 @@
 from google.cloud import storage
-import numpy as np
 import pandas as pd
 import joblib
 from datetime import datetime
