@@ -2,23 +2,19 @@ from google.cloud import storage
 import numpy as np
 import pandas as pd
 import joblib
-import os
 from datetime import datetime
-import tempfile
 
 from sklearn.ensemble import VotingClassifier
 from sklearn.model_selection import GridSearchCV, cross_validate
 from sklearn.pipeline import make_pipeline
 
-from spaceship_titanic.pipeline import create_preproc, create_models_dict
-
 # Model imports
-
 
 # Pipeline imports
 
+from spaceship_titanic.pipeline import create_preproc, create_models_dict
 
-# GCP Cloud Storage Config
+# GCP Cloud Storage Config - probably should be a params.py file
 
 BUCKET_NAME = 'kaggle-spaceship-titanic'
 BUCKET_TRAIN_DATA_PATH = 'data/train.csv'

@@ -1,4 +1,3 @@
-# $DELETE_BEGIN
 import pandas as pd
 
 import joblib
@@ -20,17 +19,13 @@ app.add_middleware(
     allow_headers = ['*'],
 )
 
-# Test url local
-# http://127.0.0.1:8000/predict?HomePlanet=Europa&CryoSleep=False&Cabin_Deck=T&Cabin_Level=1000&Cabin_Side=S&Destination=TRAPPIST-1e&Age=32&VIP=False&RoomService=100&FoodCourt=5000&ShoppingHall=10&Spa=0&VRDeck=0
-# http://127.0.0.1:8000/predict?HomePlanet=Europa&CryoSleep=False&Cabin_Deck=C&Cabin_Level=100&Cabin_Side=S&Destination=TRAPPIST-1e&Age=32&VIP=False&RoomService=10000&FoodCourt=50000&ShoppingHall=10&Spa=10000&VRDeck=10000
-
 @app.get("/")
 def index():
     return dict(greeting='thanks for looking at my API',
                 info={'me': 'Lorcan Rae',
                       'my_github': 'github.com/lorcanrae'
                       },
-                data={'data_set': 'Spaceship_Titanic_Kagge',
+                data={'data_set': 'kaggle_spaceship_titanic',
                       'kaggle_link': 'https://www.kaggle.com/competitions/spaceship-titanic',
                       'field_format': {'FieldName': 'default median or mode value'},
                       'fields_default': {'HomePlanet': 'Earth',
@@ -95,26 +90,20 @@ def predict(HomePlanet='Earth',
         Name = [Name]
     ))
 
-    # Loading model from GCP
-
-    gcs_model_name = 'model-220721-162104.joblib'
+    # Loading model from GCP - hard pass, no reason to fetch model for each predict
 
     # TODO: put this into a function - there should be a gcp.py module
     # fs = gcsfs.GCSFileSystem()
     # with fs.open(f'{BUCKET_NAME}/models/{MODEL_NAME}/{MODEL_VERSION}/{gcs_model_name}') as file:
     #     pipeline = joblib.load(file)
 
-    rel_path = f'../saved_models/{gcs_model_name}'
+    local_model_name = 'model-220721-162104.joblib'
+    rel_path = f'../saved_models/{local_model_name}'
     abs_path = os.path.dirname(__file__)
 
     pipeline = joblib.load(os.path.join(abs_path, rel_path))
-    print(abs_path)
+    # for some reason it can't return a numpy.bool_, has to be a regular bool
     y_pred = bool(pipeline.predict(X)[0])
-    return dict(Transported=y_pred) # for some reason it can't return a numpy.bool_, has to be a regular bool
-
-# if __name__ == '__main__':
-#     y_pred = predict('Europa', 'True', 'A', '10', 'P', 'TRAPPIST-1e', '32', 'False')
-#     print(y_pred['Transported'])
-
+    return dict(Transported=y_pred)
 
 # API URL: https://spaceship-titanic-api-zby5e6zv3q-ew.a.run.app
