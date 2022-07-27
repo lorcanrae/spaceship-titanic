@@ -4,7 +4,7 @@ The challenge is to build a _binary classification model_ to predict who have be
 dimension when the _Spaceship Titanic_ ran into a spacetime anomaly hidden within a dustcloud.
 This is an [open competition](https://www.kaggle.com/competitions/spaceship-titanic) hosted by kaggle.com.
 
-In addition to the kaggle submission, I have also:
+In addition to the [kaggle submission](https://www.kaggle.com/code/lorcansamuel/spaceship-titanic-eda-ensemble-using-pipes), I have also:
 - Performed an Exploratory Data Analysis.
 - Built a pipeline that transforms, imputes, encodes, and scales the data.
 - Packaged the codebase.
