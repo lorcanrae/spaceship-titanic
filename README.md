@@ -9,12 +9,19 @@ In addition to submitting a notebook on kaggle, I have also:
 - Built and exposed an [API](https://spaceship-titanic-api-zby5e6zv3q-ew.a.run.app) using GCP Cloud Run.
 - Created a [front end](https://lorcanrae-spaceship-titanic-web-0--home-w79no8.streamlitapp.com/) that queries the API.
 
-![](https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg)
+<p float='left'>
+  <img src='https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg' width='75'>
+  <img src='https://raw.githubusercontent.com/devicons/devicon/2ae2a900d2f041da66e950e4d48052658d850630/icons/pandas/pandas-original.svg' width='75'>
+  <img src='https://upload.wikimedia.org/wikipedia/commons/0/05/Scikit_learn_logo_small.svg' width='75'>
+  <img src='https://www.vectorlogo.zone/logos/google_cloud/google_cloud-icon.svg' width='75'>
+  <img src='https://raw.githubusercontent.com/devicons/devicon/master/icons/docker/docker-original-wordmark.svg' width='75'>
+  <img src='https://streamlit.io/images/brand/streamlit-mark-color.png' width='75'>
+<!-- ![](https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg)
 ![](https://raw.githubusercontent.com/devicons/devicon/2ae2a900d2f041da66e950e4d48052658d850630/icons/pandas/pandas-original.svg)
 ![](https://upload.wikimedia.org/wikipedia/commons/0/05/Scikit_learn_logo_small.svg)
 ![](https://www.vectorlogo.zone/logos/google_cloud/google_cloud-icon.svg)
 ![](https://raw.githubusercontent.com/devicons/devicon/master/icons/docker/docker-original-wordmark.svg)
-![](https://streamlit.io/images/brand/streamlit-mark-color.png)
+![](https://streamlit.io/images/brand/streamlit-mark-color.png) -->
 
 # API
 
