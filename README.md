@@ -36,14 +36,14 @@ exposed the API using GCP Container Registry and Cloud Run.
 - Random Forest
 - Gradient Boosted Random Forest (GBR)
 
-KNN, SVM with a RBF kernel, and GBR where scored the highest. An ensemble voting
+KNN, SVM with a RBF kernel, and GBR had the highest accuracy. An ensemble voting
 classifier of these three models was used. The model was placed at the end of a pipeline
-that transformed, imputed, and scaled the data.
+that transformed, imputed, encoded, and scaled the data.
 
 Hyper paramaters where tuned using a grid search on another 5 fold cross validation
 of the dataset.
 
-The model has an accuracy of 80.00009% on the test data set.
+The model has an accuracy of 80.0009% on the test data set.
 
 This model was trained and tuned in the cloud using GCP AI Platform and Cloud Storage - for my own practice.
 
