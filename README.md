@@ -8,7 +8,7 @@ In addition to the [kaggle submission](https://www.kaggle.com/code/lorcansamuel/
 - Performed an Exploratory Data Analysis.
 - Built a pipeline that transforms, imputes, encodes, and scales the data.
 - Packaged the codebase.
-- Used GCP's AI Platform and Cloud Storage to train and store the model in the cloud.
+- Used Google Cloud Platform (GCP) AI Platform and Cloud Storage to train and store the model in the cloud.
 - Containerized the package using Docker.
 - Built and exposed an [API](https://spaceship-titanic-api-zby5e6zv3q-ew.a.run.app) using GCP Cloud Run and Container Registry.
 - Created a [front end](https://lorcanrae-spaceship-titanic-web-0--home-w79no8.streamlitapp.com/) that queries the API.
@@ -23,8 +23,8 @@ In addition to the [kaggle submission](https://www.kaggle.com/code/lorcansamuel/
 
 # API
 
-I created an API using FastAPI and Uvicorn, packaged the container using Docker, and
-exposed the API using GCP Container Registry and Cloud Run.
+I created an API using FastAPI and Uvicorn, packaged the container using Docker, pushed
+the Docker image to GCP Container Registry, and exposed the API using GCP Cloud Run
 
 # Model
 
