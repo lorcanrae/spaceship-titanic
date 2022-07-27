@@ -1,12 +1,16 @@
 # Spaceship Titanic - who will survive!
 
-This is a submission for an open [kaggle competition](https://www.kaggle.com/competitions/spaceship-titanic/data).
-In addition to submitting a notebook on kaggle, I have also:
+The challenge is to build a _binary classification model_ to predict who have been transported to an alternate
+dimension when the _Spaceship Titanic_ ran into a spacetime anomaly hidden within a dustcloud.
+This is an [open competition](https://www.kaggle.com/competitions/spaceship-titanic) hosted by kaggle.com.
+
+In addition to the kaggle submission, I have also:
 - Performed an Exploratory Data Analysis.
-- Packaged up the codebase.
+- Built a pipeline that transforms, imputes, encodes, and scales the data.
+- Packaged the codebase.
 - Used GCP's AI Platform and Cloud Storage to train and store the model in the cloud.
 - Containerized the package using Docker.
-- Built and exposed an [API](https://spaceship-titanic-api-zby5e6zv3q-ew.a.run.app) using GCP Cloud Run.
+- Built and exposed an [API](https://spaceship-titanic-api-zby5e6zv3q-ew.a.run.app) using GCP Cloud Run and Container Registry.
 - Created a [front end](https://lorcanrae-spaceship-titanic-web-0--home-w79no8.streamlitapp.com/) that queries the API.
 
 <p float='left'>
@@ -16,12 +20,6 @@ In addition to submitting a notebook on kaggle, I have also:
   <img src='https://www.vectorlogo.zone/logos/google_cloud/google_cloud-icon.svg' width='75'>
   <img src='https://raw.githubusercontent.com/devicons/devicon/master/icons/docker/docker-original-wordmark.svg' width='75'>
   <img src='https://streamlit.io/images/brand/streamlit-mark-color.png' width='75'>
-<!-- ![](https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg)
-![](https://raw.githubusercontent.com/devicons/devicon/2ae2a900d2f041da66e950e4d48052658d850630/icons/pandas/pandas-original.svg)
-![](https://upload.wikimedia.org/wikipedia/commons/0/05/Scikit_learn_logo_small.svg)
-![](https://www.vectorlogo.zone/logos/google_cloud/google_cloud-icon.svg)
-![](https://raw.githubusercontent.com/devicons/devicon/master/icons/docker/docker-original-wordmark.svg)
-![](https://streamlit.io/images/brand/streamlit-mark-color.png) -->
 
 # API
 
@@ -53,3 +51,5 @@ This model was trained and tuned in the cloud using GCP AI Platform and Cloud St
 
 The data is part of an open dataset for the [Spaceship Titanic competition](https://www.kaggle.com/competitions/spaceship-titanic/data)
 hosted on kaggle.com. The train data set contains 8693 rows and the test set contains 4277 rows.
+y_test is withheld and requires a submission on kaggle.com for the model to be scored.
+Refer to competition for details.
